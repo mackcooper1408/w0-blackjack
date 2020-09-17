@@ -1,0 +1,41 @@
+body {
+  background-color: #355e3b;
+  font-family: sans-serif;
+}
+
+#dealer-hand-area,
+#player-hand-area {
+  padding: 35px;
+}
+
+#player-buttons {
+  text-align: center;
+}
+
+button {
+  color: #bb0;
+  font-size: 200%;
+  background-color: #204020;
+  padding: 10px 20px;
+  margin: 10px 20px;
+  border-radius: 10px;
+  border: none;
+}
+
+button:hover {
+  background-color: #153515;
+  color: #ee0
+}
+
+img {
+  display: inline-block;
+  width: 17%;
+  margin-right: 3%;
+}
+
+#message-area {
+  color: #bb0;
+  text-align: center;
+  font-size: 200%;
+  margin: 20px;
+}
