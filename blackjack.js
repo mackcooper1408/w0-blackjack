@@ -54,7 +54,16 @@ function evaluateHand(cards) {
   let score = 0;
 
   for (let card of cards) {
+    if (card[0] === "A" && score + 11 <= 21) {
+      score += 11;
+    }
+    else if (card[0] === "A" && score + 11 > 21) {
+      score ++;
+    }
+    else if (card[0] === "T" || card[0] === "Q" || card[0] === "J" || card[0] === "K"){ 
     score += 10;
+    }
+    else score += parseInt(card[0]);
   }
 
   return score;
@@ -75,6 +84,7 @@ function getCardImage(card) {
 /** Show scoring message and remove buttons to prevent further play. */
 
 function endHand(msg) {
+  console.log("player: ", evaluateHand(playerCards), "dealer: ", evaluateHand(dealerCards));
   document.getElementById("player-buttons").remove();
   document.getElementById("message-area").innerText = msg;
 }
@@ -83,6 +93,12 @@ function endHand(msg) {
 
 function handleHit() {
   drawAndShowPlayerCard();
+  console.log("player: ", evaluateHand(playerCards));
+
+  // check for bust
+  if (evaluateHand(playerCards) > 21) {
+    endHand("Bust!");
+  }
 }
 
 /** Handle a player standing.
@@ -94,6 +110,20 @@ function handleHit() {
 
 function handleStand() {
   dealerPlay();
+  
+  // evaluate final scores
+  if (evaluateHand(dealerCards) > 21) {
+    endHand("You Win!")
+  }
+  else if (evaluateHand(dealerCards) > evaluateHand(playerCards)) {
+    endHand("You Lose!");
+  }
+  else if (evaluateHand(dealerCards) < evaluateHand(playerCards)) {
+    endHand("You Win!");
+  }
+  else {
+    endHand("Push");
+  }
 }
 
 /** Dealer plays: draws additional cards until reaching DEALER_STANDS_ON. */
@@ -137,6 +167,12 @@ function startGame() {
   playerCards = [];
   drawAndShowPlayerCard();
   drawAndShowPlayerCard();
+
+  //check for blackjack
+  if (evaluateHand(playerCards) === 21) {
+    endHand("Blackjack!");
+  }
+  console.log("player: ", evaluateHand(playerCards), "dealer: ", evaluateHand(dealerCards));
 }
 
 
