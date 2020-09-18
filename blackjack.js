@@ -64,6 +64,10 @@ function evaluateHand(cards) {
     score += 10;
     }
     else score += parseInt(card[0]);
+
+    //if (score > 21 && cards.some(card => card[0] === "A")) {
+      //score -= 10;
+    //}
   }
 
   return score;
@@ -93,12 +97,17 @@ function endHand(msg) {
 
 function handleHit() {
   drawAndShowPlayerCard();
-  console.log("player: ", evaluateHand(playerCards));
-
+  let score = evaluateHand(playerCards);
+  
+  // check Ace Values
+  if (score > 21 && playerCards.some(card => card[0] === "A" ? true: false)) {
+    score -= 10;
+  }
   // check for bust
-  if (evaluateHand(playerCards) > 21) {
+  if (score > 21) {
     endHand("Bust!");
   }
+  console.log("player: ", score);
 }
 
 /** Handle a player standing.
