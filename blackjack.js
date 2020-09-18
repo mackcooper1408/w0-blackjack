@@ -89,12 +89,56 @@ function getCardImage(card) {
   return img;
 }
 
+// handle new game with same deck
+function newGame() {
+  document.getElementById("dealer-hand-area").innerHTML = '';
+  document.getElementById("player-hand-area").innerHTML = '';
+  document.getElementById("restart").remove();
+  document.getElementById("message-area").innerText = "(Dealer must stand on 17)";
+  document.getElementById("hit").addEventListener("click", handleHit);
+  document.getElementById("stand").addEventListener("click", handleStand);
+
+
+  //check if shuffle needed
+  if (deck.length < 15) {
+    setupDeck();
+    shuffleDeck();
+    alert("reshuffling!");
+  }
+  console.log("deck left: ", deck.length);
+
+  // re-deal
+  dealerCards = [];
+  drawAndShowDealerCard();
+
+  playerCards = [];
+  drawAndShowPlayerCard();
+  drawAndShowPlayerCard();
+
+  //check for blackjack
+  if (evaluateHand(playerCards) === 21) {
+    endHand("Blackjack!");
+  }
+
+  console.log("player: ", evaluateHand(playerCards), "dealer: ", evaluateHand(dealerCards));
+
+}
 /** Show scoring message and remove buttons to prevent further play. */
 
 function endHand(msg) {
   console.log("player: ", evaluateHand(playerCards), "dealer: ", evaluateHand(dealerCards));
-  document.getElementById("player-buttons").remove();
+  //document.getElementById("player-buttons").remove();
+  document.getElementById("hit").removeEventListener("click", handleHit);
+  document.getElementById("stand").removeEventListener("click", handleStand);
   document.getElementById("message-area").innerText = msg;
+
+  let restart = document.createElement("button");
+  restart.innerText = "Restart";
+  restart.setAttribute("id", "restart", "type", "button");
+  document.getElementById("restart-button").appendChild(restart);
+
+  
+  restart.addEventListener("click", newGame)
 }
 
 /** Handle a player hitting. */
