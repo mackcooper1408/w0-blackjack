@@ -52,26 +52,30 @@ function setupDeck() {
 
 function evaluateHand(cards) {
   let score = 0;
+  let ace = 0;
 
   for (let card of cards) {
-    if (card[0] === "A" && score + 11 <= 21) {
+    if (card[0] === "A") {
+      ace += 1;
       score += 11;
     }
-    else if (card[0] === "A" && score + 11 > 21) {
-      score ++;
-    }
     else if (card[0] === "T" || card[0] === "Q" || card[0] === "J" || card[0] === "K"){ 
-    score += 10;
+      score += 10;
     }
     else score += parseInt(card[0]);
 
-    //if (score > 21 && cards.some(card => card[0] === "A")) {
-      //score -= 10;
-    //}
-  }
+    // if (score > 21 && cards.some(card => card[0] === "A" ? true : false)) {
+      //   score -= 10;
+      // }
+    }
 
-  return score;
-}
+    if (ace >= 1 && score > 21) {
+      score -= 10;
+      ace = 0;
+    }
+
+    return score;
+  }
 
 console.assert(evaluateHand(["9H", "8D"]) === 17);
 console.assert(evaluateHand(["9H", "8D", "5S"]) === 22);
@@ -97,17 +101,12 @@ function endHand(msg) {
 
 function handleHit() {
   drawAndShowPlayerCard();
-  let score = evaluateHand(playerCards);
-  
-  // check Ace Values
-  if (score > 21 && playerCards.some(card => card[0] === "A" ? true: false)) {
-    score -= 10;
-  }
+
   // check for bust
-  if (score > 21) {
+  if (evaluateHand(playerCards) > 21) {
     endHand("Bust!");
   }
-  console.log("player: ", score);
+  console.log("player: ", evaluateHand(playerCards));
 }
 
 /** Handle a player standing.
